@@ -19,6 +19,13 @@ Pure scala impementation of avro
 
 - [ ] records
 - [ ] enums
-- [ ] arrays
-- [ ] maps
-- [ ] names
+- [X] arrays (missing block size reading and writing in bytes)
+- [x] maps (missing block size reading and writing in bytes and setting the block size when writing)
+- [ ] unions
+- [ ] fixed
+
+### Other
+
+- [ ] Sort Order
+- [ ] Single-object encoding
+- [ ] Object Container Files

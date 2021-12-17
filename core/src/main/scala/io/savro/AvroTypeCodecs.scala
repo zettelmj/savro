@@ -1,7 +1,7 @@
 package io.savro
 
 import scodec._
-import scodec.bits.BitVector
+import scodec.bits.{BitVector, ByteVector, HexStringSyntax}
 import scodec.codecs._
 import shapeless.{::, HNil}
 
@@ -185,5 +185,93 @@ object AvroTypeCodecs {
       DecodeResultT(codec.decode(bits)).map {
         case _ :: value :: HNil => value
       }.value
+  }
+
+  implicit def arrayCodec[A](implicit innerCodec: Codec[A]): Codec[Seq[A]] = arrayCodec[A](itemsPerBlock = 1000)(innerCodec)
+
+  implicit def arrayCodec[A](itemsPerBlock: Int)(implicit innerCodec: Codec[A]): Codec[Seq[A]] = new Codec[Seq[A]] {
+    private val emptyByteCodec = constant(hex"0")
+    private val terminationCodec = constant(ByteVector(0))
+    private val blockCodec = listOfN(intCodec, innerCodec)
+
+    // TODO: Implement reading blocks with byte size
+    override def decode(bits: BitVector): Attempt[DecodeResult[Seq[A]]] = {
+      def inner(b: BitVector, acc: Seq[A]): Attempt[DecodeResult[Seq[A]]] =
+        peek(byte).decode(b).flatMap {
+          case DecodeResult(0, _) => val correctionCodec = if (acc.isEmpty) emptyByteCodec else nullCodec
+            (correctionCodec ~ terminationCodec).decode(b).map {
+              r => DecodeResult(acc, r.remainder)
+            }
+          case _ => blockCodec.decode(b).flatMap {
+            case DecodeResult(value, remainder) => inner(remainder, acc ++ value)
+          }
+        }
+
+      DecodeResultT(inner(bits, Seq.empty[A])).value
+    }
+
+    // TODO: Implement writing blocks with byte size
+    override def encode(value: Seq[A]): Attempt[BitVector] = {
+      def inner(values: Seq[A], bits: BitVector): Attempt[BitVector] = {
+        if (values.isEmpty) {
+          val correctionCodec = if (bits.isEmpty) emptyByteCodec else nullCodec
+          (correctionCodec ~ terminationCodec).encode((), ()).map(b => bits ++ b)
+        } else {
+          val (head, tail) = values.splitAt(itemsPerBlock)
+
+          blockCodec.encode(head.toList).map(b => inner(tail, bits ++ b)).flatten
+        }
+      }
+
+      inner(value, BitVector.empty)
+    }
+
+    override def sizeBound: SizeBound = SizeBound.atLeast(16)
+  }
+
+  implicit def mapCodec[A](implicit innerCodec: Codec[A]): Codec[Map[String, A]] = mapCodec[A](itemsPerBlock = 1000)
+
+  implicit def mapCodec[A](itemsPerBlock: Int)(implicit innerCodec: Codec[A]): Codec[Map[String, A]] = new Codec[Map[String, A]] {
+    private val emptyByteCodec = constant(hex"0")
+    private val kvCodec = stringCodec :: innerCodec
+    private val terminationCodec = constant(ByteVector(0))
+    private val blockCodec = listOfN(intCodec, kvCodec)
+
+    // TODO: Implement reading blocks with byte size
+    override def decode(bits: BitVector): Attempt[DecodeResult[Map[String, A]]] = {
+      def inner(b: BitVector, acc: List[String :: A :: HNil]): Attempt[DecodeResult[List[String :: A :: HNil]]] =
+        peek(byte).decode(b).flatMap {
+          case DecodeResult(0, _) =>
+            val bNew = if (acc.isEmpty) b.drop(8) else b
+            terminationCodec.decode(bNew).map(r => DecodeResult(acc, r.remainder))
+          case _ => blockCodec.decode(b).flatMap {
+            case DecodeResult(value, remainder) => inner(remainder, acc ++ value)
+          }
+        }
+
+      DecodeResultT(inner(bits, List.empty)).map(l => l.map {
+        case k :: v :: HNil => k -> v
+      }.toMap).value
+    }
+
+    // TODO: Implement writing blocks with byte size
+    override def encode(value: Map[String, A]): Attempt[BitVector] = {
+      def inner(values: Map[String, A], bits: BitVector): Attempt[BitVector] = {
+        if (values.isEmpty) {
+          val correctionCodec = if (bits.isEmpty) emptyByteCodec else nullCodec
+          (correctionCodec ~ terminationCodec).encode((), ()).map(b => bits ++ b)
+        } else {
+          val (head, tail) = values.splitAt(itemsPerBlock)
+
+          blockCodec.encode(head.map {
+            case (k, v) => k :: v :: HNil
+          }.toList).map(b => inner(tail, bits ++ b)).flatten
+        }
+      }
+
+      inner(value, BitVector.empty)
+    }
+
+    override def sizeBound: SizeBound = SizeBound.atLeast(16)
   }
 }

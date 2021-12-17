@@ -33,30 +33,30 @@ class DoubleCodecSpec extends AnyWordSpec with Matchers {
   }
 
   "encode" must {
-    "0.0f into 0x00 00 00 00 00 00 00 00" in {
-      val expectedBits = hex"0x00 00 00 00 00 00 00 00".toBitVector
+    "0.0f into 00 00 00 00 00 00 00 00" in {
+      val expectedBits = hex"00 00 00 00 00 00 00 00".toBitVector
       doubleCodec.encode(0.0d) mustEqual successful(expectedBits)
     }
-    "min double into 0xff ff ff ff ff ff ef ff" in {
-      val expectedBits = hex"0xff ff ff ff ff ff ef ff".toBitVector
+    "min double into ff ff ff ff ff ff ef ff" in {
+      val expectedBits = hex"ff ff ff ff ff ff ef ff".toBitVector
       doubleCodec.encode(Double.MinValue) mustEqual successful(expectedBits)
     }
-    "max double into 0xff ff ff ff ff ff ef 7f" in {
-      val expectedBits = hex"0xff ff ff ff ff ff ef 7f".toBitVector
+    "max double into ff ff ff ff ff ff ef 7f" in {
+      val expectedBits = hex"ff ff ff ff ff ff ef 7f".toBitVector
       doubleCodec.encode(Double.MaxValue) mustEqual successful(expectedBits)
     }
   }
   "decode" must {
-    "0x00 00 00 00 00 00 00 00 to 0.0f" in {
-      val bits = hex"0x00 00 00 00 00 00 00 00".toBitVector
+    "00 00 00 00 00 00 00 00 to 0.0f" in {
+      val bits = hex"00 00 00 00 00 00 00 00".toBitVector
       doubleCodec.decode(bits) mustEqual successful(DecodeResult(0.0d, BitVector.empty))
     }
-    "0xff ff ff ff ff ff ef ff to min double" in {
-      val bits = hex"0xff ff ff ff ff ff ef ff".toBitVector
+    "ff ff ff ff ff ff ef ff to min double" in {
+      val bits = hex"ff ff ff ff ff ff ef ff".toBitVector
       doubleCodec.decode(bits) mustEqual successful(DecodeResult(Double.MinValue, BitVector.empty))
     }
-    "0xff ff ff ff ff ff ef 7f to max double" in {
-      val bits = hex"0xff ff ff ff ff ff ef 7f".toBitVector
+    "ff ff ff ff ff ff ef 7f to max double" in {
+      val bits = hex"ff ff ff ff ff ff ef 7f".toBitVector
       doubleCodec.decode(bits) mustEqual successful(DecodeResult(Double.MaxValue, BitVector.empty))
     }
   }

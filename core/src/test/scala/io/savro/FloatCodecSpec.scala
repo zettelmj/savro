@@ -33,30 +33,30 @@ class FloatCodecSpec extends AnyWordSpec with Matchers {
   }
 
   "encode" must {
-    "0.0f into 0x00 00 00 00" in {
-      val expectedBits = hex"0x00 00 00 00".toBitVector
+    "0.0f into 00 00 00 00" in {
+      val expectedBits = hex"00 00 00 00".toBitVector
       floatCodec.encode(0.0f) mustEqual successful(expectedBits)
     }
-    "min float into 0xff ff 7f ff" in {
-      val expectedBits = hex"0xff ff 7f ff".toBitVector
+    "min float into ff ff 7f ff" in {
+      val expectedBits = hex"ff ff 7f ff".toBitVector
       floatCodec.encode(Float.MinValue) mustEqual successful(expectedBits)
     }
-    "max float into 0xff ff 7f 7f" in {
-      val expectedBits = hex"0xff ff 7f 7f".toBitVector
+    "max float into ff ff 7f 7f" in {
+      val expectedBits = hex"ff ff 7f 7f".toBitVector
       floatCodec.encode(Float.MaxValue) mustEqual successful(expectedBits)
     }
   }
   "decode" must {
-    "0x00 00 00 00 to 0.0f" in {
-      val bits = hex"0x00 00 00 00".toBitVector
+    "00 00 00 00 to 0.0f" in {
+      val bits = hex"00 00 00 00".toBitVector
       floatCodec.decode(bits) mustEqual successful(DecodeResult(0.0f, BitVector.empty))
     }
-    "0xff ff 7f ff to min float" in {
-      val bits = hex"0xff ff 7f ff".toBitVector
+    "ff ff 7f ff to min float" in {
+      val bits = hex"ff ff 7f ff".toBitVector
       floatCodec.decode(bits) mustEqual successful(DecodeResult(Float.MinValue, BitVector.empty))
     }
-    "0xff ff 7f 7f to max float" in {
-      val bits = hex"0xff ff 7f 7f".toBitVector
+    "ff ff 7f 7f to max float" in {
+      val bits = hex"ff ff 7f 7f".toBitVector
       floatCodec.decode(bits) mustEqual successful(DecodeResult(Float.MaxValue, BitVector.empty))
     }
   }

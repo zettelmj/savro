@@ -34,12 +34,12 @@ class StringCodecSpec extends AnyWordSpec with Matchers {
   }
 
   "encode" must {
-    "convert empty string to 0x00" in {
-      val expectedBits = hex"0x00".toBitVector
+    "convert empty string to 00" in {
+      val expectedBits = hex"00".toBitVector
       stringCodec.encode("") mustEqual successful(expectedBits)
     }
-    "convert hello world to 0x16 68 65 6c 6c 6f 20 77 6f 72 6c 64" in {
-      val expectedBits = hex"0x16 68 65 6c 6c 6f 20 77 6f 72 6c 64".toBitVector
+    "convert hello world to 16 68 65 6c 6c 6f 20 77 6f 72 6c 64" in {
+      val expectedBits = hex"16 68 65 6c 6c 6f 20 77 6f 72 6c 64".toBitVector
       stringCodec.encode("hello world") mustEqual successful(expectedBits)
     }
   }
@@ -49,12 +49,12 @@ class StringCodecSpec extends AnyWordSpec with Matchers {
       val bits = BitVector.empty
       stringCodec.decode(bits) mustEqual failure(General(insufficientBits(8, 0).toString(), List("length")))
     }
-    "return empty string for input 0x00" in {
-      val bits = hex"0x00".toBitVector
+    "return empty string for input 00" in {
+      val bits = hex"00".toBitVector
       stringCodec.decode(bits) mustEqual successful(DecodeResult("", BitVector.empty))
     }
-    "return hello world for input 0x16 68 65 6c 6c 6f 20 77 6f 72 6c 64" in {
-      val bits = hex"0x16 68 65 6c 6c 6f 20 77 6f 72 6c 64".toBitVector
+    "return hello world for input 16 68 65 6c 6c 6f 20 77 6f 72 6c 64" in {
+      val bits = hex"16 68 65 6c 6c 6f 20 77 6f 72 6c 64".toBitVector
       stringCodec.decode(bits) mustEqual successful(DecodeResult("hello world", BitVector.empty))
     }
   }

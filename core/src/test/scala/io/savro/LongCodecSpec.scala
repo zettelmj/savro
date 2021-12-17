@@ -353,150 +353,150 @@ class LongCodecSpec extends AnyWordSpec with Matchers {
       val bits = BitVector.fill(4)(high = false)
       longCodec.decode(bits) mustBe failure(Err.General("cannot acquire 8 bits from a vector that contains 4 bits", List.empty))
     }
-    "0x0 will decode to 0" in {
-      val bits = hex"0x0".toBitVector
+    "0 will decode to 0" in {
+      val bits = hex"0".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(0, BitVector.empty))
     }
-    "0x7F will decode to -64" in {
-      val bits = hex"0x7F".toBitVector
+    "7F will decode to -64" in {
+      val bits = hex"7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-64, BitVector.empty))
     }
-    "0x80 01 will decode to 64" in {
-      val bits = hex"0x80 01".toBitVector
+    "80 01 will decode to 64" in {
+      val bits = hex"80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(64, BitVector.empty))
     }
-    "0xFF 7F will decode to -8192" in {
-      val bits = hex"0xFF 7F".toBitVector
+    "FF 7F will decode to -8192" in {
+      val bits = hex"FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-8192, BitVector.empty))
     }
-    "0x80 80 01 will decode to 8192" in {
-      val bits = hex"0x80 80 01".toBitVector
+    "80 80 01 will decode to 8192" in {
+      val bits = hex"80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(8192, BitVector.empty))
     }
-    "0xFF FF 7F will decode to -1048576" in {
-      val bits = hex"0xFF FF 7F".toBitVector
+    "FF FF 7F will decode to -1048576" in {
+      val bits = hex"FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-1048576, BitVector.empty))
     }
-    "0x80 80 80 01 will decode to 1048576" in {
-      val bits = hex"0x80 80 80 01".toBitVector
+    "80 80 80 01 will decode to 1048576" in {
+      val bits = hex"80 80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(1048576, BitVector.empty))
     }
-    "0xFF FF FF 7F will decode to -134217728" in {
-      val bits = hex"0xFF FF FF 7F".toBitVector
+    "FF FF FF 7F will decode to -134217728" in {
+      val bits = hex"FF FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-134217728, BitVector.empty))
     }
-    "0x80 80 80 80 01 will decode to 134217728" in {
-      val bits = hex"0x80 80 80 80 01".toBitVector
+    "80 80 80 80 01 will decode to 134217728" in {
+      val bits = hex"80 80 80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(134217728, BitVector.empty))
     }
-    "0xFF FF FF FF 7F will decode to -17179869184L" in {
-      val bits = hex"0xFF FF FF FF 7F".toBitVector
+    "FF FF FF FF 7F will decode to -17179869184L" in {
+      val bits = hex"FF FF FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-17179869184L, BitVector.empty))
     }
-    "0x80 80 80 80 80 01 will decode to 17179869184L" in {
-      val bits = hex"0x80 80 80 80 80 01".toBitVector
+    "80 80 80 80 80 01 will decode to 17179869184L" in {
+      val bits = hex"80 80 80 80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(17179869184L, BitVector.empty))
     }
-    "0xFF FF FF FF FF 7F will decode to -2199023255552" in {
-      val bits = hex"0xFF FF FF FF FF 7F".toBitVector
+    "FF FF FF FF FF 7F will decode to -2199023255552" in {
+      val bits = hex"FF FF FF FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-2199023255552L, BitVector.empty))
     }
-    "0x80 80 80 80 80 80 01 will decode to 2199023255552L" in {
-      val bits = hex"0x80 80 80 80 80 80 01".toBitVector
+    "80 80 80 80 80 80 01 will decode to 2199023255552L" in {
+      val bits = hex"80 80 80 80 80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(2199023255552L, BitVector.empty))
     }
-    "0xFF FF FF FF FF FF 7F will decode to -281474976710656" in {
-      val bits = hex"0xFF FF FF FF FF FF 7F".toBitVector
+    "FF FF FF FF FF FF 7F will decode to -281474976710656" in {
+      val bits = hex"FF FF FF FF FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-281474976710656L, BitVector.empty))
     }
-    "0x80 80 80 80 80 80 80 01 will decode to 281474976710656L" in {
-      val bits = hex"0x80 80 80 80 80 80 80 01".toBitVector
+    "80 80 80 80 80 80 80 01 will decode to 281474976710656L" in {
+      val bits = hex"80 80 80 80 80 80 80 01".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(281474976710656L, BitVector.empty))
     }
-    "0xFF FF FF FF FF FF FF 7F will decode to -36028797018963968" in {
-      val bits = hex"0xFF FF FF FF FF FF FF 7F".toBitVector
+    "FF FF FF FF FF FF FF 7F will decode to -36028797018963968" in {
+      val bits = hex"FF FF FF FF FF FF FF 7F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(-36028797018963968L, BitVector.empty))
     }
-    "0xFE FF FF FF FF FF FF FF FF 0F will decode to max long" in {
-      val bits = hex"0xFE FF FF FF FF FF FF FF FF 0F".toBitVector
+    "FE FF FF FF FF FF FF FF FF 0F will decode to max long" in {
+      val bits = hex"FE FF FF FF FF FF FF FF FF 0F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(Long.MaxValue, BitVector.empty))
     }
-    "0xFF FF FF FF FF FF FF FF FF 0F will decode to min long" in {
-      val bits = hex"0xFF FF FF FF FF FF FF FF FF 0F".toBitVector
+    "FF FF FF FF FF FF FF FF FF 0F will decode to min long" in {
+      val bits = hex"FF FF FF FF FF FF FF FF FF 0F".toBitVector
       longCodec.decode(bits) mustBe successful(DecodeResult(Long.MinValue, BitVector.empty))
     }
   }
   "encode" must {
-    "encoding 0 will result in 0x0" in {
-      val expectedBits = hex"0x0".toBitVector
+    "encoding 0 will result in 0" in {
+      val expectedBits = hex"0".toBitVector
       longCodec.encode(0) mustBe successful(expectedBits)
     }
-    "encoding -64 will result in 0x7F" in {
-      val expectedBits = hex"0x7F".toBitVector
+    "encoding -64 will result in 7F" in {
+      val expectedBits = hex"7F".toBitVector
       longCodec.encode(-64) mustBe successful(expectedBits)
     }
-    "encoding 64 will result in 0x80 01" in {
-      val expectedBits = hex"0x80 01".toBitVector
+    "encoding 64 will result in 80 01" in {
+      val expectedBits = hex"80 01".toBitVector
       longCodec.encode(64) mustBe successful(expectedBits)
     }
-    "encoding -8192 will result in 0xFF 7F" in {
-      val expectedBits = hex"0xFF 7F".toBitVector
+    "encoding -8192 will result in FF 7F" in {
+      val expectedBits = hex"FF 7F".toBitVector
       longCodec.encode(-8192) mustBe successful(expectedBits)
     }
-    "encoding 8192 will result in 0x80 80 01" in {
-      val expectedBits = hex"0x80 80 01".toBitVector
+    "encoding 8192 will result in 80 80 01" in {
+      val expectedBits = hex"80 80 01".toBitVector
       longCodec.encode(8192) mustBe successful(expectedBits)
     }
-    "encoding -1048576 will result in 0xFF FF 7F" in {
-      val expectedBits = hex"0xFF FF 7F".toBitVector
+    "encoding -1048576 will result in FF FF 7F" in {
+      val expectedBits = hex"FF FF 7F".toBitVector
       longCodec.encode(-1048576) mustBe successful(expectedBits)
     }
-    "encoding 1048576 will result in 0x80 80 80 01" in {
-      val expectedBits = hex"0x80 80 80 01".toBitVector
+    "encoding 1048576 will result in 80 80 80 01" in {
+      val expectedBits = hex"80 80 80 01".toBitVector
       longCodec.encode(1048576) mustBe successful(expectedBits)
     }
-    "encoding -134217728 will result in 0xFF FF FF 7F" in {
-      val expectedBits = hex"0xFF FF FF 7F".toBitVector
+    "encoding -134217728 will result in FF FF FF 7F" in {
+      val expectedBits = hex"FF FF FF 7F".toBitVector
       longCodec.encode(-134217728) mustBe successful(expectedBits)
     }
-    "encoding 134217728 will result in 0x80 80 80 80 01" in {
-      val expectedBits = hex"0x80 80 80 80 01".toBitVector
+    "encoding 134217728 will result in 80 80 80 80 01" in {
+      val expectedBits = hex"80 80 80 80 01".toBitVector
       longCodec.encode(134217728) mustBe successful(expectedBits)
     }
-    "encoding -17179869184L will result in 0xFF FF FF FF 7F" in {
-      val expectedBits = hex"0xFF FF FF FF 7F".toBitVector
+    "encoding -17179869184L will result in FF FF FF FF 7F" in {
+      val expectedBits = hex"FF FF FF FF 7F".toBitVector
       longCodec.encode(-17179869184L) mustBe successful(expectedBits)
     }
-    "encoding 17179869184L will result in 0x80 80 80 80 80 01" in {
-      val expectedBits = hex"0x80 80 80 80 80 01".toBitVector
+    "encoding 17179869184L will result in 80 80 80 80 80 01" in {
+      val expectedBits = hex"80 80 80 80 80 01".toBitVector
       longCodec.encode(17179869184L) mustBe successful(expectedBits)
     }
-    "encoding -2199023255552L will result in 0xFF FF FF FF FF 7F" in {
-      val expectedBits = hex"0xFF FF FF FF FF 7F".toBitVector
+    "encoding -2199023255552L will result in FF FF FF FF FF 7F" in {
+      val expectedBits = hex"FF FF FF FF FF 7F".toBitVector
       longCodec.encode(-2199023255552L) mustBe successful(expectedBits)
     }
-    "encoding 2199023255552L will result in 0x80 80 80 80 80 80 01" in {
-      val expectedBits = hex"0x80 80 80 80 80 80 01".toBitVector
+    "encoding 2199023255552L will result in 80 80 80 80 80 80 01" in {
+      val expectedBits = hex"80 80 80 80 80 80 01".toBitVector
       longCodec.encode(2199023255552L) mustBe successful(expectedBits)
     }
-    "encoding -281474976710656L will result in 0xFF FF FF FF FF FF 7F" in {
-      val expectedBits = hex"0xFF FF FF FF FF FF 7F".toBitVector
+    "encoding -281474976710656L will result in FF FF FF FF FF FF 7F" in {
+      val expectedBits = hex"FF FF FF FF FF FF 7F".toBitVector
       longCodec.encode(-281474976710656L) mustBe successful(expectedBits)
     }
-    "encoding 281474976710656L will result in 0x80 80 80 80 80 80 80 01" in {
-      val expectedBits = hex"0x80 80 80 80 80 80 80 01".toBitVector
+    "encoding 281474976710656L will result in 80 80 80 80 80 80 80 01" in {
+      val expectedBits = hex"80 80 80 80 80 80 80 01".toBitVector
       longCodec.encode(281474976710656L) mustBe successful(expectedBits)
     }
-    "encoding -36028797018963968L will result in 0xFF FF FF FF FF FF FF 7F" in {
-      val expectedBits = hex"0xFF FF FF FF FF FF FF 7F".toBitVector
+    "encoding -36028797018963968L will result in FF FF FF FF FF FF FF 7F" in {
+      val expectedBits = hex"FF FF FF FF FF FF FF 7F".toBitVector
       longCodec.encode(-36028797018963968L) mustBe successful(expectedBits)
     }
-    "encoding long MaxValue will result in 0xFE FF FF FF FF FF FF FF FF 01" in {
-      val expectedBits = hex"0xFE FF FF FF FF FF FF FF FF 01".toBitVector
+    "encoding long MaxValue will result in FE FF FF FF FF FF FF FF FF 01" in {
+      val expectedBits = hex"FE FF FF FF FF FF FF FF FF 01".toBitVector
       longCodec.encode(Long.MaxValue) mustBe successful(expectedBits)
     }
-    "encoding long MinValue will result in 0xFF FF FF FF FF FF FF FF FF 01" in {
-      val expectedBits = hex"0xFF FF FF FF FF FF FF FF FF 01".toBitVector
+    "encoding long MinValue will result in FF FF FF FF FF FF FF FF FF 01" in {
+      val expectedBits = hex"FF FF FF FF FF FF FF FF FF 01".toBitVector
       longCodec.encode(Long.MinValue) mustBe successful(expectedBits)
     }
   }

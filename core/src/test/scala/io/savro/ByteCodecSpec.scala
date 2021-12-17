@@ -34,12 +34,12 @@ class ByteCodecSpec extends AnyWordSpec with Matchers {
   }
 
   "encode" must {
-    "encode empty byte array to 0x00" in {
-      val expectedBits = hex"0x00".toBitVector
+    "encode empty byte array to 00" in {
+      val expectedBits = hex"00".toBitVector
       byteCodec.encode(List.empty[Byte]) mustEqual successful(expectedBits)
     }
-    "encode hello world to 0x04 40 40" in {
-      val expectedBits = hex"0x04 40 40".toBitVector
+    "encode hello world to 04 40 40" in {
+      val expectedBits = hex"04 40 40".toBitVector
       byteCodec.encode(List(64.toByte, 64.toByte)) mustEqual successful(expectedBits)
     }
   }
@@ -49,12 +49,12 @@ class ByteCodecSpec extends AnyWordSpec with Matchers {
       val bits = BitVector.empty
       byteCodec.decode(bits) mustEqual failure(General(insufficientBits(8, 0).toString(), List("length")))
     }
-    "return empty byte array for input 0x00" in {
-      val bits = hex"0x00".toBitVector
+    "return empty byte array for input 00" in {
+      val bits = hex"00".toBitVector
       byteCodec.decode(bits) mustEqual successful(DecodeResult(List.empty[Byte], BitVector.empty))
     }
-    "return array containing 64, 64 for input 0x04 40 40" in {
-      val bits = hex"0x04 40 40".toBitVector
+    "return array containing 64, 64 for input 04 40 40" in {
+      val bits = hex"04 40 40".toBitVector
       byteCodec.decode(bits) mustEqual successful(DecodeResult(List(64.toByte, 64.toByte), BitVector.empty))
     }
   }

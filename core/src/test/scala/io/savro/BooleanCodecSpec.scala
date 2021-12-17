@@ -38,25 +38,25 @@ class BooleanCodecSpec extends AnyWordSpec with Matchers {
       booleanCodec.decode(bits) mustBe failure(Err.InsufficientBits(7, 4, List.empty[String]))
     }
     "fail on unexpected input" in {
-      val bits = hex"0xf".toBitVector
+      val bits = hex"f".toBitVector
       booleanCodec.decode(bits) mustBe failure(Err.General("expected constant BitVector(7 bits, 0x00) but got BitVector(7 bits, 0x0e)", List.empty[String]))
     }
     "decode zero to false" in {
-      val bits = hex"0x0".toBitVector
+      val bits = hex"0".toBitVector
       booleanCodec.decode(bits) mustBe successful(DecodeResult(false, BitVector.empty))
     }
     "decode one to true" in {
-      val bits = hex"0x1".toBitVector
+      val bits = hex"1".toBitVector
       booleanCodec.decode(bits) mustBe successful(DecodeResult(true, BitVector.empty))
     }
   }
   "encode" must {
     "encode true" in {
-      val expectedBits = hex"0x01".toBitVector
+      val expectedBits = hex"01".toBitVector
       booleanCodec.encode(true) mustBe successful(expectedBits)
     }
     "encode false" in {
-      val expectedBits = hex"0x00".toBitVector
+      val expectedBits = hex"00".toBitVector
       booleanCodec.encode(false) mustBe successful(expectedBits)
     }
   }
