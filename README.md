@@ -21,7 +21,7 @@ Pure scala impementation of avro
 - [ ] enums
 - [X] arrays (missing block size reading and writing in bytes)
 - [x] maps (missing block size reading and writing in bytes and setting the block size when writing)
-- [ ] unions
+- [x] unions
 - [ ] fixed
 
 ### Other

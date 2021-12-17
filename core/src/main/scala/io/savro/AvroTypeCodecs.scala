@@ -274,4 +274,16 @@ object AvroTypeCodecs {
 
     override def sizeBound: SizeBound = SizeBound.atLeast(16)
   }
+
+  def unionCodec[A](mapping: Int => Codec[A], inverseMapping: A => Int): Codec[A] = new Codec[A] {
+    override def decode(bits: BitVector): Attempt[DecodeResult[A]] = intCodec.flatPrepend { index =>
+      mapping(index).hlist
+    }.map {
+      case _ :: result :: HNil => result
+    }.decode(bits)
+
+    override def encode(value: A): Attempt[BitVector] = (intCodec ~ mapping(inverseMapping(value))).encode(inverseMapping(value), value)
+
+    override def sizeBound: SizeBound = SizeBound.atLeast(8)
+  }
 }
