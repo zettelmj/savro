@@ -18,8 +18,8 @@ Pure scala impementation of avro
 ### Complex Types
 
 - [ ] records
-- [ ] enums
-- [X] arrays (missing block size reading and writing in bytes)
+- [x] enums
+- [x] arrays (missing block size reading and writing in bytes)
 - [x] maps (missing block size reading and writing in bytes and setting the block size when writing)
 - [x] unions
 - [ ] fixed

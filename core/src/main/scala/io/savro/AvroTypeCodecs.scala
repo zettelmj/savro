@@ -187,6 +187,14 @@ object AvroTypeCodecs {
       }.value
   }
 
+  implicit def enumCodec[A](mapping: Int => A, inverseMapping: A => Int): Codec[A] = new Codec[A] {
+    override def decode(bits: BitVector): Attempt[DecodeResult[A]] = intCodec.map(mapping).decode(bits)
+
+    override def encode(value: A): Attempt[BitVector] = intCodec.encode(inverseMapping(value))
+
+    override def sizeBound: SizeBound = SizeBound.atLeast(8)
+  }
+
   implicit def arrayCodec[A](implicit innerCodec: Codec[A]): Codec[Seq[A]] = arrayCodec[A](itemsPerBlock = 1000)(innerCodec)
 
   implicit def arrayCodec[A](itemsPerBlock: Int)(implicit innerCodec: Codec[A]): Codec[Seq[A]] = new Codec[Seq[A]] {
