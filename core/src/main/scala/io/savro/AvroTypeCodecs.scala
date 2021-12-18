@@ -294,4 +294,12 @@ object AvroTypeCodecs {
 
     override def sizeBound: SizeBound = SizeBound.atLeast(8)
   }
+
+  def fixedCodec[A](size: Int)(implicit innerCodec: Codec[A]): Codec[Seq[A]] = new Codec[Seq[A]] {
+    override def decode(bits: BitVector): Attempt[DecodeResult[Seq[A]]] = list(innerCodec).decode(bits)
+
+    override def encode(value: Seq[A]): Attempt[BitVector] = list(innerCodec).encode(value.toList)
+
+    override def sizeBound: SizeBound = SizeBound.exact(size)
+  }
 }
